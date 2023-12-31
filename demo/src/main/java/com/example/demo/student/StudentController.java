@@ -4,9 +4,9 @@ package com.example.demo.student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.Month;
+
 import java.util.List;
+
 
 @RequestMapping(path = "api/v1/student")
 @RestController
@@ -20,7 +20,33 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getStudents() {
+    public List<Student> getStudents(@RequestParam(required = false) Long id,
+                                     @RequestParam(required = false) String name,
+                                     @RequestParam(required = false) String email,
+                                     @RequestParam(required = false) String dobAfter,
+                                     @RequestParam(required = false) String dobBefore) {
+
+
+
+
+        if(id != null && (name != null || email != null || dobAfter != null || dobBefore != null)){
+            throw new IllegalArgumentException("Ne moze filtrirati");
+        } else if (name != null && (email != null || dobAfter != null || dobBefore != null )) {
+            throw new IllegalArgumentException("Ne moze filtrirati");
+        } else if (email != null && (dobAfter != null || dobBefore != null )) {
+            throw new IllegalArgumentException("Ne moze filtrirati");
+        }
+        //else if (dobAfter != null && (id != null || name != null || email != null) {
+        //throw new IllegalArgumentException("Ne moze filtrirati po dobAfter i jos nesto sto nije dobBefore");
+        //}
+        else if (id!=null) {
+            return studentService.getStudentsById(id);
+        } else if (name!=null) {
+            return studentService.getStudentsByName(name);
+        } else if (email != null) {
+            return studentService.getStudentsByEmail(email);
+        }
+
         return studentService.getStudents();
     }
     @PostMapping
