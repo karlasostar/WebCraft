@@ -26,9 +26,6 @@ public class StudentController {
                                      @RequestParam(required = false) String dobAfter,
                                      @RequestParam(required = false) String dobBefore) {
 
-
-
-
         if(id != null && (name != null || email != null || dobAfter != null || dobBefore != null)){
             throw new IllegalArgumentException("Ne moze filtrirati");
         } else if (name != null && (email != null || dobAfter != null || dobBefore != null )) {
@@ -42,9 +39,11 @@ public class StudentController {
         else if (id!=null) {
             return studentService.getStudentsById(id);
         } else if (name!=null) {
-            return studentService.getStudentsByName(name);
+            return studentService.getStudentsByNamePrefix(name);
         } else if (email != null) {
             return studentService.getStudentsByEmail(email);
+        } else if (dobAfter != null) {
+            return studentService.getStudentsByDobAfter(dobAfter);
         }
 
         return studentService.getStudents();

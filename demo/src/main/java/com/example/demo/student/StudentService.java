@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -77,10 +78,10 @@ public class StudentService {
 
     }
 
-    public List<Student> getStudentsByName(String name) {
-        Optional <Student> student = studentRepository.findStudentByName(name);
+    public List<Student> getStudentsByNamePrefix(String name) {
+        Optional <Student> student = studentRepository.findStudentByNamePrefix(name);
         if (student.isPresent()){
-            return studentRepository.findStudentByName(name).stream().toList();
+            return studentRepository.findStudentByNamePrefix(name).stream().toList();
         }
         else {
             throw new IllegalStateException("ne postoji student sa tim imenom");
@@ -88,12 +89,32 @@ public class StudentService {
     }
 
     public List<Student> getStudentsByEmail(String email) {
-        Optional <Student> student = studentRepository.findStudentByEmail(email);
+        Optional <Student> student = studentRepository.findStudentByEmailPrefix(email);
         if (student.isPresent()){
-            return studentRepository.findStudentByEmail(email).stream().toList();
+            return studentRepository.findStudentByEmailPrefix(email).stream().toList();
         }
         else {
             throw new IllegalStateException("ne postoji student sa tim emailom");
+        }
+    }
+
+    public List<Student> getStudentsByEmailPrefix(String email) {
+        Optional<Student> student = studentRepository.findStudentByEmailPrefix(email);
+        if (student.isPresent()){
+            return studentRepository.findStudentByEmailPrefix(email).stream().toList();
+        }
+        else {
+            throw new IllegalStateException("ne postoji student sa tim pocetkom emaila");
+        }
+    }
+
+    public List<Student> getStudentsByDobAfter(String dobAfter) {
+        List<Student> student = studentRepository.findStudentByDobAfter(LocalDate.parse(dobAfter));
+        if (!student.isEmpty()){
+            return studentRepository.findStudentByDobAfter(LocalDate.parse(dobAfter)).stream().toList();
+        }
+        else {
+            throw new IllegalStateException("ne postoji student roden nakon");
         }
     }
 }
